@@ -64,25 +64,25 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-between text-slate-100 relative overflow-hidden selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-between text-slate-100 relative overflow-hidden selection:bg-sky-500 selection:text-slate-950">
       
       {/* Ambient background glows */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Bar */}
       <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 shadow-lg shadow-emerald-500/20 font-black">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 font-black">
             <BrainCircuit className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xl font-black tracking-tight text-white">
-              EDU<span className="text-emerald-400">-WAVE</span>
+              EDU<span className="text-sky-400">-WAVE</span>
             </span>
             <span className="block text-[10px] uppercase font-extrabold tracking-widest text-slate-400">
-              Academic Intelligence v2.0
+              Academic Intelligence v2.1
             </span>
           </div>
         </div>
@@ -103,7 +103,7 @@ export const LoginPage: React.FC = () => {
         <div className="p-8 rounded-3xl bg-slate-900/90 border border-slate-800/80 shadow-2xl backdrop-blur-xl space-y-6">
           
           <div className="space-y-1.5 text-center">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-[11px] font-bold border border-emerald-500/30 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 text-sky-300 text-[11px] font-bold border border-sky-500/30 mb-2">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Multi-Role Academic Portal</span>
             </div>
@@ -135,7 +135,7 @@ export const LoginPage: React.FC = () => {
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="e.g. ADMIN@123, STU-4001, TCH-3001"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-950/70 rounded-xl border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all font-mono"
+                  className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-950/70 rounded-xl border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all font-mono"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setForgotOpen(true)}
-                  className="text-[11px] font-bold text-emerald-400 hover:underline"
+                  className="text-[11px] font-bold text-sky-400 hover:underline"
                 >
                   Forgot Password?
                 </button>
@@ -161,7 +161,7 @@ export const LoginPage: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full pl-10 pr-10 py-2.5 text-xs bg-slate-950/70 rounded-xl border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all font-mono"
+                  className="w-full pl-10 pr-10 py-2.5 text-xs bg-slate-950/70 rounded-xl border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all font-mono"
                 />
                 <button
                   type="button"
@@ -177,7 +177,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-xs shadow-lg shadow-sky-500/25 transition-all flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
             >
               {isLoading ? (
                 <span>Authenticating...</span>
@@ -201,8 +201,8 @@ export const LoginPage: React.FC = () => {
                 onClick={() => handleQuickFill('ADMIN@123', 'ADMIN@123')}
                 className="p-2 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition-all group"
               >
-                <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover:text-emerald-400">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover:text-sky-400">
+                  <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
                   <span>Admin</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">ADMIN@123</span>
@@ -237,8 +237,8 @@ export const LoginPage: React.FC = () => {
                 onClick={() => handleQuickFill('STU-4001', 'password123')}
                 className="p-2 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition-all group"
               >
-                <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover:text-emerald-400">
-                  <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover:text-sky-400">
+                  <GraduationCap className="w-3.5 h-3.5 text-sky-400" />
                   <span>Student</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">STU-4001</span>

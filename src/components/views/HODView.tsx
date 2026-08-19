@@ -23,6 +23,10 @@ import {
   Phone,
   BarChart3,
   Layers,
+  User,
+  Mail,
+  HeartHandshake,
+  AlertCircle,
 } from 'lucide-react';
 
 interface HODViewProps {
@@ -38,6 +42,8 @@ export const HODView: React.FC<HODViewProps> = ({ activeTab, setActiveTab }) => 
     assignments,
     events,
     departments,
+    eventStaffMembers,
+    studentExamRecords,
     createEvent,
     archiveEvent,
     queueWhatsAppAlert,
@@ -45,6 +51,9 @@ export const HODView: React.FC<HODViewProps> = ({ activeTab, setActiveTab }) => 
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClassFilter, setSelectedClassFilter] = useState('all');
+  const [analyticsFilter, setAnalyticsFilter] = useState({ dept: 'all', classId: 'all', period: 'weekly' as 'weekly' | 'monthly' });
+  const [perfSubTab, setPerfSubTab] = useState<'student' | 'teacher'>('student');
+  const [eventSectionFilter, setEventSectionFilter] = useState('all');
 
   // Event creation form state
   const [isCreateEventOpen, setCreateEventOpen] = useState(false);
@@ -155,7 +164,7 @@ export const HODView: React.FC<HODViewProps> = ({ activeTab, setActiveTab }) => 
               <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
                 {deptTeachers.length || 8}
               </p>
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              <p className="text-[11px] text-sky-600 dark:text-sky-400 font-semibold">
                 100% active assignments
               </p>
             </div>
@@ -227,13 +236,13 @@ export const HODView: React.FC<HODViewProps> = ({ activeTab, setActiveTab }) => 
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs font-bold font-mono">
                         <span className="text-slate-500">Workload Level</span>
-                        <span className={classLoad >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}>
+                        <span className={classLoad >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-sky-600 dark:text-sky-400'}>
                           {classLoad}% ({status})
                         </span>
                       </div>
                       <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${classLoad >= 60 ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                          className={`h-full rounded-full ${classLoad >= 60 ? 'bg-amber-500' : 'bg-sky-500'}`}
                           style={{ width: `${classLoad}%` }}
                         />
                       </div>
@@ -516,13 +525,248 @@ export const HODView: React.FC<HODViewProps> = ({ activeTab, setActiveTab }) => 
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
                 >
                   <Send className="w-4 h-4" />
                   <span>Publish & Broadcast via WhatsApp</span>
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ANALYTICS TAB */}
+      {activeTab === 'analytics' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Workload Analytics</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Academic workload estimates across the department. Not a medical assessment.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                value={analyticsFilter.period}
+                onChange={e => setAnalyticsFilter(prev => ({ ...prev, period: e.target.value as 'weekly' | 'monthly' }))}
+                className="px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+              >
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+              <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+                {(['student', 'teacher'] as const).map(t => (
+                  <button key={t} onClick={() => setPerfSubTab(t)} className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${ perfSubTab === t ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400' }`}>{t}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-300 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>All workload estimates are academic-only metrics. No medical or psychological inference should be made.</span>
+          </div>
+
+          {perfSubTab === 'student' && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Student Academic Workload Distribution</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {users.filter(u => u.role === 'student').map(student => {
+                  const studentAssignments = assignments.filter(a => a.class_id === student.class_id);
+                  const pendingHours = studentAssignments.filter(a => a.status !== 'completed').reduce((s, a) => s + a.estimated_hours, 0);
+                  const weeklyCapacity = analyticsFilter.period === 'weekly' ? 40 : 160;
+                  const loadPct = Math.min(100, Math.round((pendingHours / weeklyCapacity) * 100));
+                  const overdueCount = studentAssignments.filter(a => a.due_date < new Date().toISOString().split('T')[0] && a.status !== 'completed').length;
+                  return (
+                    <div key={student.id} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">{student.full_name}</p>
+                          <p className="text-xs text-slate-500">{student.unique_id}</p>
+                        </div>
+                        {overdueCount > 0 && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600">{overdueCount} Overdue</span>
+                        )}
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-slate-500">Load estimate ({analyticsFilter.period})</span>
+                          <span className="font-mono font-bold text-slate-900 dark:text-white">{loadPct}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full">
+                          <div
+                            className={`h-full rounded-full transition-all ${ loadPct > 70 ? 'bg-red-500' : loadPct > 40 ? 'bg-amber-500' : 'bg-sky-500' }`}
+                            style={{ width: `${loadPct}%` }}
+                          />
+                        </div>
+                        <p className="text-[10px] text-slate-400">{pendingHours}h pending • {studentAssignments.filter(a => a.status === 'completed').length}/{studentAssignments.length} complete</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Department summary */}
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { label: 'High Load Students', color: 'bg-red-500', count: users.filter(u => u.role === 'student').filter(s => { const hrs = assignments.filter(a => a.class_id === s.class_id && a.status !== 'completed').reduce((sum,a) => sum+a.estimated_hours,0); return hrs > 28; }).length },
+                  { label: 'Medium Load', color: 'bg-amber-500', count: users.filter(u => u.role === 'student').filter(s => { const hrs = assignments.filter(a => a.class_id === s.class_id && a.status !== 'completed').reduce((sum,a) => sum+a.estimated_hours,0); return hrs >= 15 && hrs <= 28; }).length },
+                  { label: 'Manageable Load', color: 'bg-sky-500', count: users.filter(u => u.role === 'student').filter(s => { const hrs = assignments.filter(a => a.class_id === s.class_id && a.status !== 'completed').reduce((sum,a) => sum+a.estimated_hours,0); return hrs < 15; }).length },
+                ].map(item => (
+                  <div key={item.label} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
+                    <div className={`w-3 h-3 rounded-full ${item.color} mx-auto mb-2`} />
+                    <p className="text-2xl font-black text-slate-900 dark:text-white">{item.count}</p>
+                    <p className="text-xs text-slate-500">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {perfSubTab === 'teacher' && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Teacher Assignment Load</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {users.filter(u => u.role === 'teacher').map(teacher => {
+                  const teacherAssignments = assignments.filter(a => a.teacher_id === teacher.id || a.teacher_name === teacher.full_name);
+                  return (
+                    <div key={teacher.id} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl overflow-hidden bg-sky-100 shrink-0">
+                          {teacher.avatar_url ? <img src={teacher.avatar_url} alt={teacher.full_name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-sky-500"><User className="w-4 h-4" /></div>}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">{teacher.full_name}</p>
+                          <p className="text-xs text-sky-600">{teacher.department_name || 'Academic Dept'}</p>
+                        </div>
+                        <span className="ml-auto text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300">{teacherAssignments.length} Assignments</span>
+                      </div>
+                      <div className="space-y-1">
+                        {teacherAssignments.slice(0,4).map(a => (
+                          <div key={a.id} className="text-xs flex items-center justify-between">
+                            <span className="truncate text-slate-600 dark:text-slate-400">{a.title}</span>
+                            <span className="text-[10px] text-slate-400 ml-2">{a.class_name}</span>
+                          </div>
+                        ))}
+                        {teacherAssignments.length > 4 && <p className="text-[10px] text-slate-400">+{teacherAssignments.length - 4} more...</p>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* PERFORMANCE ANALYTICS TAB */}
+      {activeTab === 'performance' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">Student Performance Analytics</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Exam scores and academic performance trends across the department.</p>
+          </div>
+
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { label: 'Total Exam Records', value: studentExamRecords.length, color: 'text-sky-500' },
+              { label: 'Avg Score', value: studentExamRecords.length > 0 ? Math.round(studentExamRecords.reduce((s, r) => s + (r.score/r.total_marks*100), 0)/studentExamRecords.length) + '%' : 'N/A', color: 'text-emerald-500' },
+              { label: 'Students Tracked', value: new Set(studentExamRecords.map(r => r.student_id)).size, color: 'text-amber-500' },
+              { label: 'Subjects Covered', value: new Set(studentExamRecords.map(r => r.subject_name)).size, color: 'text-blue-500' },
+            ].map(card => (
+              <div key={card.label} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
+                <p className={`text-2xl font-black ${card.color}`}>{card.value}</p>
+                <p className="text-xs text-slate-500 mt-1">{card.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Per-student breakdown */}
+          {Array.from(new Set(studentExamRecords.map(r => r.student_id))).map(studentId => {
+            const records = studentExamRecords.filter(r => r.student_id === studentId);
+            const studentName = records[0]?.student_name || 'Unknown';
+            const avgScore = Math.round(records.reduce((s, r) => s + (r.score/r.total_marks*100), 0)/records.length);
+            return (
+              <div key={studentId} className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{studentName}</h3>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${ avgScore >= 80 ? 'bg-emerald-100 text-emerald-700' : avgScore >= 60 ? 'bg-sky-100 text-sky-700' : avgScore >= 40 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700' }`}>Avg {avgScore}%</span>
+                </div>
+                <div className="space-y-2">
+                  {records.map(rec => (
+                    <div key={rec.id} className="flex items-center gap-3 text-xs">
+                      <span className="w-32 text-slate-500 truncate">{rec.subject_name}</span>
+                      <span className="w-28 text-slate-600 dark:text-slate-400 truncate">{rec.exam_name}</span>
+                      <div className="flex-1 bg-slate-100 dark:bg-slate-800 h-2 rounded-full">
+                        <div
+                          className={`h-full rounded-full ${ (rec.score/rec.total_marks*100) >= 80 ? 'bg-emerald-500' : (rec.score/rec.total_marks*100) >= 60 ? 'bg-sky-500' : (rec.score/rec.total_marks*100) >= 40 ? 'bg-amber-500' : 'bg-red-500' }`}
+                          style={{ width: `${Math.round(rec.score/rec.total_marks*100)}%` }}
+                        />
+                      </div>
+                      <span className="w-16 font-mono font-bold text-slate-900 dark:text-white">{rec.score}/{rec.total_marks}</span>
+                      <span className={`w-8 font-bold px-1.5 py-0.5 rounded text-center ${ rec.grade === 'A' || rec.grade === 'A+' ? 'bg-emerald-100 text-emerald-700' : rec.grade === 'B' ? 'bg-sky-100 text-sky-700' : rec.grade === 'C' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700' }`}>{rec.grade}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* EVENT ORGANIZERS TAB - HOD */}
+      {activeTab === 'volunteers' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Event Organizers</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Full event volunteer registry with contact info and section assignments.</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={eventSectionFilter}
+              onChange={e => setEventSectionFilter(e.target.value)}
+              className="px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+            >
+              <option value="all">All Sections</option>
+              {['technical','cultural','sports','marketing','media','registration','hospitality','logistics','operations','other'].map(s => (
+                <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+          {/* Summary by section */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {['technical','cultural','sports','marketing','media'].map(section => {
+              const count = eventStaffMembers.filter(s => s.section === section).length;
+              return (
+                <div key={section} onClick={() => setEventSectionFilter(section)} className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center cursor-pointer hover:border-sky-400 transition-all">
+                  <p className="text-xl font-black text-sky-500">{count}</p>
+                  <p className="text-[10px] font-bold text-slate-500 capitalize">{section}</p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {eventStaffMembers.filter(s => eventSectionFilter === 'all' || s.section === eventSectionFilter).map(member => (
+              <div key={member.id} className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl overflow-hidden bg-sky-100 dark:bg-sky-950">
+                    {member.avatar_url ? <img src={member.avatar_url} alt={member.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-sky-500"><User className="w-5 h-5" /></div>}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{member.name}</p>
+                    <p className="text-xs text-sky-600 dark:text-sky-400 font-semibold">{member.role}</p>
+                  </div>
+                  <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-700 font-bold capitalize shrink-0">{member.section}</span>
+                </div>
+                <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  {member.department && <div className="font-semibold text-slate-700 dark:text-slate-300">{member.department} • {member.year_semester}</div>}
+                  {member.phone && <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-sky-500" />{member.phone}</div>}
+                  {member.email && <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-sky-500" /><span className="truncate">{member.email}</span></div>}
+                  {member.assigned_event_title && <div className="flex items-center gap-1.5"><CalendarIcon className="w-3 h-3 text-amber-500" />{member.assigned_event_title}</div>}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

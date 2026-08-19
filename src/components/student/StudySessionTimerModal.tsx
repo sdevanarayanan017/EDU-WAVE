@@ -94,7 +94,7 @@ export const StudySessionTimerModal: React.FC<StudySessionTimerModalProps> = ({
         
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="p-1.5 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold">
               <Timer className="w-4 h-4" />
             </span>
             <h3 className="text-base font-black text-slate-900 dark:text-white">
@@ -176,19 +176,19 @@ export const StudySessionTimerModal: React.FC<StudySessionTimerModalProps> = ({
               <div className="flex items-center justify-center gap-2 pt-2">
                 <button
                   onClick={() => resetTimer(15)}
-                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors"
+                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-sky-500 hover:text-white transition-colors"
                 >
                   15 min
                 </button>
                 <button
                   onClick={() => resetTimer(25)}
-                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors"
+                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-sky-500 hover:text-white transition-colors"
                 >
                   25 min
                 </button>
                 <button
                   onClick={() => resetTimer(45)}
-                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors"
+                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-sky-500 hover:text-white transition-colors"
                 >
                   45 min
                 </button>
@@ -202,7 +202,7 @@ export const StudySessionTimerModal: React.FC<StudySessionTimerModalProps> = ({
                 className={`px-6 py-2.5 rounded-xl font-bold text-xs shadow-md flex items-center gap-2 transition-all ${
                   isActive
                     ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
-                    : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                    : 'bg-sky-500 hover:bg-sky-400 text-white shadow-sky-500/25'
                 }`}
               >
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -240,7 +240,7 @@ export const StudySessionTimerModal: React.FC<StudySessionTimerModalProps> = ({
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
+              className="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs rounded-xl shadow-md shadow-sky-500/25 transition-all"
             >
               Log Study Hours
             </button>

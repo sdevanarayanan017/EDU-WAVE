@@ -74,5 +74,15 @@ body {
 
 /* Custom Checkbox */
 input[type="checkbox"] {
-  accent-color: #10b981;
+  accent-color: #0284c7;
+}
+
+::selection {
+  background: #bae6fd;
+  color: #0369a1;
+}
+
+.dark ::selection {
+  background: #0369a1;
+  color: #f0f9ff;
 }

@@ -54,7 +54,7 @@ export const ContextualAssignmentModal: React.FC<ContextualAssignmentModalProps>
     critical: 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-red-300 dark:border-red-800',
     high: 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-red-300 dark:border-red-800',
     medium: 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800',
-    low: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800',
+    low: 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-400 border-sky-300 dark:border-sky-800',
   };
 
   const subTasks = assignment.sub_tasks || [];
@@ -68,12 +68,12 @@ export const ContextualAssignmentModal: React.FC<ContextualAssignmentModalProps>
         {/* Top Header Bar */}
         <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="p-2 rounded-xl bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold">
               <BookOpen className="w-5 h-5" />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
                   {assignment.subject_name} • {assignment.class_name}
                 </span>
                 <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${priorityColors[assignment.priority_level]}`}>
@@ -89,7 +89,7 @@ export const ContextualAssignmentModal: React.FC<ContextualAssignmentModalProps>
           <div className="flex items-center gap-2">
             <button
               onClick={handleLaunchSocraticTutor}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold shadow-sm transition-all"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Ask Socratic Tutor</span>

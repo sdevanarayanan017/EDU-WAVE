@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { CreateAssignmentModal } from '../teacher/CreateAssignmentModal';
+import { EventSectionCategory } from '@/lib/types';
 import {
   Users,
   Calendar as CalendarIcon,
@@ -21,7 +22,16 @@ import {
   CalendarRange,
   Bookmark,
   TrendingDown,
-  Check
+  Check,
+  BarChart3,
+  TrendingUp,
+  GraduationCap,
+  Filter,
+  User,
+  Phone,
+  Mail,
+  AlertCircle,
+  HeartHandshake,
 } from 'lucide-react';
 
 interface TeacherViewProps {
@@ -38,6 +48,9 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
     syllabi,
     events,
     projectGroups,
+    eventStaffMembers,
+    studentExamRecords,
+    users,
     createSyllabusItem,
     currentUser,
   } = useApp();
@@ -52,6 +65,11 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
   const [newTextbookRef, setNewTextbookRef] = useState('');
   const [newTeacherNotes, setNewTeacherNotes] = useState('');
   const [newContentText, setNewContentText] = useState('');
+
+  // Tab filter states
+  const [studentTimetableFilter, setStudentTimetableFilter] = useState({ classId: 'all', studentId: 'all' });
+  const [analyticsSubTab, setAnalyticsSubTab] = useState<'workload' | 'exams'>('workload');
+  const [eventSectionFilter, setEventSectionFilter] = useState<string>('all');
 
   const activeClass = classes.find(c => c.id === selectedClassId) || classes[0];
 
@@ -125,10 +143,10 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
       <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="p-1.5 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold">
               <Users className="w-4 h-4" />
             </span>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
               Teacher Instruction Suite
             </span>
           </div>
@@ -146,7 +164,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
             <select
               value={selectedClassId}
               onChange={(e) => setSelectedClassId(e.target.value)}
-              className="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
               {classes.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -158,7 +176,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
 
           <button
             onClick={() => setCreateAssignmentOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all flex items-center gap-1.5 active:scale-95"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center gap-1.5 active:scale-95"
           >
             <Sparkles className="w-4 h-4" />
             <span>Create Assignment</span>
@@ -179,7 +197,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
               <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
                 {classAssignments.length}
               </p>
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              <p className="text-[11px] text-sky-600 dark:text-sky-400 font-semibold">
                 Syllabus-linked & subdivided
               </p>
             </div>
@@ -212,7 +230,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Collision Risk Index
               </span>
-              <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+              <p className="text-2xl font-black text-sky-600 dark:text-sky-400 font-mono">
                 Low Risk
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -746,12 +764,240 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ activeTab, setActiveTa
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-sm"
+                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl text-xs font-bold shadow-sm"
                 >
                   Upload to Knowledge Base
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* STUDENT TIMETABLE INSPECTOR TAB */}
+      {activeTab === 'student-timetable' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">Student Timetable Inspector</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">View any student's personalized schedule and deadline load.</p>
+          </div>
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={studentTimetableFilter.classId}
+              onChange={e => setStudentTimetableFilter(prev => ({ ...prev, classId: e.target.value }))}
+              className="px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+            >
+              <option value="all">All Classes</option>
+              {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <select
+              value={studentTimetableFilter.studentId}
+              onChange={e => setStudentTimetableFilter(prev => ({ ...prev, studentId: e.target.value }))}
+              className="px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white"
+            >
+              <option value="all">All Students</option>
+              {users.filter(u => u.role === 'student').map(u => (
+                <option key={u.id} value={u.id}>{u.full_name}</option>
+              ))}
+            </select>
+          </div>
+          {/* Student cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {users.filter(u => {
+              if (u.role !== 'student') return false;
+              if (studentTimetableFilter.classId !== 'all' && u.class_id !== studentTimetableFilter.classId) return false;
+              if (studentTimetableFilter.studentId !== 'all' && u.id !== studentTimetableFilter.studentId) return false;
+              return true;
+            }).map(student => {
+              const studentAssignments = assignments.filter(a => a.class_id === student.class_id);
+              const overdueCount = studentAssignments.filter(a => a.due_date < new Date().toISOString().split('T')[0] && a.status !== 'completed').length;
+              const completedCount = studentAssignments.filter(a => a.status === 'completed').length;
+              return (
+                <div key={student.id} className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl overflow-hidden bg-sky-100 dark:bg-sky-950 shrink-0">
+                      {student.avatar_url ? (
+                        <img src={student.avatar_url} alt={student.full_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-sky-500"><User className="w-5 h-5" /></div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{student.full_name}</p>
+                      <p className="text-xs text-sky-600 dark:text-sky-400">{student.unique_id} • {student.class_id}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800">
+                      <p className="text-lg font-black text-slate-900 dark:text-white">{studentAssignments.length}</p>
+                      <p className="text-[10px] text-slate-500">Total</p>
+                    </div>
+                    <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30">
+                      <p className="text-lg font-black text-emerald-600">{completedCount}</p>
+                      <p className="text-[10px] text-slate-500">Done</p>
+                    </div>
+                    <div className="p-2 rounded-xl bg-red-50 dark:bg-red-950/30">
+                      <p className="text-lg font-black text-red-500">{overdueCount}</p>
+                      <p className="text-[10px] text-slate-500">Overdue</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    {studentAssignments.slice(0,3).map(a => (
+                      <div key={a.id} className="flex items-center justify-between text-xs">
+                        <span className="truncate text-slate-700 dark:text-slate-300">{a.title}</span>
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${ a.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : a.due_date < new Date().toISOString().split('T')[0] ? 'bg-red-100 text-red-700' : 'bg-sky-100 text-sky-700' }`}>{a.status === 'completed' ? 'Done' : a.due_date < new Date().toISOString().split('T')[0] ? 'Overdue' : a.due_date}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* STUDENT ANALYTICS TAB */}
+      {activeTab === 'analytics' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Student Analytics</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Academic workload estimates and exam performance. All data labeled as academic estimates only.</p>
+            </div>
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+              {(['workload', 'exams'] as const).map(t => (
+                <button key={t} onClick={() => setAnalyticsSubTab(t)} className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${ analyticsSubTab === t ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400' }`}>{t}</button>
+              ))}
+            </div>
+          </div>
+
+          {analyticsSubTab === 'workload' && (
+            <div className="space-y-4">
+              <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-300 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>Academic workload estimate only — not a medical or psychological assessment.</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {users.filter(u => u.role === 'student').map(student => {
+                  const studentAssignments = assignments.filter(a => a.class_id === student.class_id);
+                  const pendingLoad = studentAssignments.filter(a => a.status !== 'completed').reduce((sum, a) => sum + a.estimated_hours, 0);
+                  const workloadPct = Math.min(100, Math.round((pendingLoad / 40) * 100));
+                  return (
+                    <div key={student.id} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{student.full_name}</p>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${ workloadPct > 70 ? 'bg-red-100 text-red-700' : workloadPct > 40 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700' }`}>{workloadPct > 70 ? 'High' : workloadPct > 40 ? 'Medium' : 'Low'}</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs text-slate-500">
+                          <span>Academic Load Estimate</span>
+                          <span className="font-mono font-bold">{workloadPct}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full">
+                          <div className={`h-full rounded-full transition-all ${ workloadPct > 70 ? 'bg-red-500' : workloadPct > 40 ? 'bg-amber-500' : 'bg-sky-500' }`} style={{ width: `${workloadPct}%` }} />
+                        </div>
+                        <p className="text-[10px] text-slate-400">{pendingLoad}h pending work • {studentAssignments.filter(a => a.status === 'completed').length}/{studentAssignments.length} assignments done</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {analyticsSubTab === 'exams' && (
+            <div className="space-y-4">
+              {/* Exam records table */}
+              <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                <table className="w-full text-xs">
+                  <thead className="bg-slate-50 dark:bg-slate-800">
+                    <tr>
+                      {['Student','Subject','Exam','Score','Grade','Date'].map(h => (
+                        <th key={h} className="px-4 py-3 text-left font-bold text-slate-700 dark:text-slate-300">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {studentExamRecords.map(rec => (
+                      <tr key={rec.id} className="bg-white dark:bg-slate-900 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors">
+                        <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{rec.student_name}</td>
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{rec.subject_name}</td>
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{rec.exam_name}</td>
+                        <td className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">{rec.score}/{rec.total_marks}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-0.5 rounded-full font-bold ${ rec.grade === 'A' || rec.grade === 'A+' ? 'bg-emerald-100 text-emerald-700' : rec.grade === 'B' ? 'bg-sky-100 text-sky-700' : rec.grade === 'C' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700' }`}>{rec.grade}</span>
+                        </td>
+                        <td className="px-4 py-3 text-slate-500">{rec.exam_date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Subject-wise averages */}
+              <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Subject-wise Average Performance</h3>
+                {Array.from(new Set(studentExamRecords.map(r => r.subject_name))).map(subj => {
+                  const records = studentExamRecords.filter(r => r.subject_name === subj);
+                  const avg = Math.round(records.reduce((s, r) => s + (r.score / r.total_marks * 100), 0) / records.length);
+                  return (
+                    <div key={subj} className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{subj}</span>
+                        <span className="font-mono font-bold text-slate-900 dark:text-white">{avg}%</span>
+                      </div>
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full">
+                        <div className={`h-full rounded-full ${ avg >= 80 ? 'bg-emerald-500' : avg >= 60 ? 'bg-sky-500' : avg >= 40 ? 'bg-amber-500' : 'bg-red-500' }`} style={{ width: `${avg}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* EVENT ORGANIZERS TAB - Teacher */}
+      {activeTab === 'events' && (
+        <div className="space-y-6 animate-in fade-in">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">Event Organizers</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">View and manage event staff members by section.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={eventSectionFilter}
+              onChange={e => setEventSectionFilter(e.target.value)}
+              className="px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"
+            >
+              <option value="all">All Sections</option>
+              {['technical','cultural','sports','marketing','media','registration','hospitality','logistics','operations','other'].map(s => (
+                <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {eventStaffMembers.filter(s => eventSectionFilter === 'all' || s.section === eventSectionFilter).map(member => (
+              <div key={member.id} className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl overflow-hidden bg-sky-100 dark:bg-sky-950">
+                    {member.avatar_url ? <img src={member.avatar_url} alt={member.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-sky-500"><User className="w-5 h-5" /></div>}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{member.name}</p>
+                    <p className="text-xs text-sky-600 dark:text-sky-400 font-semibold">{member.role}</p>
+                  </div>
+                  <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-700 font-bold capitalize">{member.section}</span>
+                </div>
+                <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  {member.phone && <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-sky-500" />{member.phone}</div>}
+                  {member.email && <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-sky-500" /><span className="truncate">{member.email}</span></div>}
+                  {member.assigned_event_title && <div className="flex items-center gap-1.5"><CalendarRange className="w-3 h-3 text-amber-500" />{member.assigned_event_title}</div>}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

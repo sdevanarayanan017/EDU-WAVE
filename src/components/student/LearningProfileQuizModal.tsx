@@ -103,10 +103,10 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
         {/* Top Meta Bar */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="p-1.5 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold">
               <BrainCircuit className="w-4 h-4" />
             </span>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
               15-Question AI Learning Assessment
             </span>
           </div>
@@ -119,7 +119,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
         {/* Progress Bar */}
         <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300 rounded-full"
+            className="h-full bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-300 rounded-full"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -136,7 +136,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
 
           {currentQ.helpText && (
             <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <HelpCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <HelpCircle className="w-3.5 h-3.5 text-sky-500 shrink-0" />
               <span>{currentQ.helpText}</span>
             </p>
           )}
@@ -154,7 +154,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
                 onClick={() => handleSelectOption(opt.value, opt.metaKey)}
                 className={`p-4 rounded-2xl border text-xs font-semibold cursor-pointer transition-all flex items-center justify-between ${
                   isSelected
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 dark:border-emerald-500 text-emerald-900 dark:text-emerald-200 ring-2 ring-emerald-500/20'
+                    ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-500 dark:border-sky-500 text-sky-900 dark:text-sky-200 ring-2 ring-sky-500/20'
                     : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600'
                 }`}
               >
@@ -162,7 +162,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
                       isSelected
-                        ? 'bg-emerald-500 text-white'
+                        ? 'bg-sky-500 text-white'
                         : 'border border-slate-300 dark:border-slate-600 text-slate-400'
                     }`}
                   >
@@ -171,7 +171,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
                   <span>{opt.text}</span>
                 </div>
 
-                {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                {isSelected && <CheckCircle2 className="w-4 h-4 text-sky-500" />}
               </div>
             );
           })}
@@ -193,7 +193,7 @@ export const LearningProfileQuizModal: React.FC<LearningProfileQuizModalProps> =
             type="button"
             onClick={handleNext}
             disabled={isSubmitting}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-600/25 transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
           >
             {currentIdx === LEARNING_PROFILE_QUESTIONS.length - 1 ? (
               <>

@@ -12,6 +12,8 @@ export interface User {
   class_id?: string;
   class_name?: string;
   section?: string;
+  semester?: string;
+  register_number?: string;
   avatar_url?: string;
   phone?: string;
   bio?: string;
@@ -136,6 +138,48 @@ export interface InstitutionalEvent {
   archived?: boolean;
 }
 
+export type EventSectionCategory =
+  | 'technical'
+  | 'cultural'
+  | 'sports'
+  | 'marketing'
+  | 'media'
+  | 'registration'
+  | 'hospitality'
+  | 'logistics'
+  | 'operations'
+  | 'other';
+
+export interface EventStaffMember {
+  id: string;
+  name: string;
+  role: 'organizer' | 'volunteer' | 'coordinator' | 'lead';
+  section: EventSectionCategory;
+  phone: string;
+  email: string;
+  assigned_event_id?: string;
+  assigned_event_title: string;
+  avatar_url?: string;
+  department?: string;
+  year_semester?: string;
+}
+
+export interface StudentExamRecord {
+  id: string;
+  student_id: string;
+  student_name: string;
+  class_id: string;
+  class_name: string;
+  subject_id: string;
+  subject_name: string;
+  semester: string;
+  exam_name: string; // e.g. "Mid-Term 1", "Mid-Term 2", "Semester Finals", "Internal Assessment"
+  score: number; // 0-100
+  total_marks: number; // 100
+  grade: string; // 'A+' | 'A' | 'B+' | 'B' | 'C' | 'F'
+  exam_date: string;
+}
+
 export interface ProjectTask {
   id: string;
   title: string;
@@ -143,6 +187,7 @@ export interface ProjectTask {
   assigned_to: string;
   assigned_to_name: string;
   status: 'todo' | 'in_progress' | 'review' | 'done';
+  priority?: 'high' | 'medium' | 'low';
   due_date: string;
 }
 
@@ -179,6 +224,7 @@ export interface ProjectGroup {
   created_by: string;
   start_date: string;
   deadline: string;
+  priority?: 'high' | 'medium' | 'low';
   members: {
     id: string;
     name: string;

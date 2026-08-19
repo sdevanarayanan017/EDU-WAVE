@@ -31,13 +31,13 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
   const roleColor = (role?: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+        return 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30';
       case 'hod':
         return 'bg-purple-500/15 text-purple-400 border-purple-500/30';
       case 'teacher':
         return 'bg-blue-500/15 text-blue-400 border-blue-500/30';
       default:
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+        return 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30';
     }
   };
 
@@ -60,19 +60,19 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
         
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 shadow-md shadow-emerald-500/20 font-black">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 font-black">
             <BrainCircuit className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-base font-black tracking-tight text-slate-900 dark:text-white">
-                EDU<span className="text-emerald-500 dark:text-emerald-400">-WAVE</span>
+                EDU<span className="text-sky-500 dark:text-sky-400">-WAVE</span>
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                v2.0
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+                v2.1
               </span>
             </div>
-            <span className="hidden sm:block text-[10px] text-slate-400">
+            <span className="hidden sm:block text-[10px] text-slate-400 font-medium">
               AI Workload & Academic Coordination
             </span>
           </div>
@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
             >
               <Bell className="w-4 h-4" />
               {whatsAppQueue.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 text-white rounded-full text-[9px] font-black flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-sky-500 text-white rounded-full text-[9px] font-black flex items-center justify-center shadow-sm">
                   {whatsAppQueue.length}
                 </span>
               )}
@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
               <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-4 space-y-3 z-50 animate-in fade-in">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                   <span className="text-xs font-black uppercase text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-emerald-500" /> WhatsApp & System Alerts
+                    <Phone className="w-3.5 h-3.5 text-sky-500" /> WhatsApp & System Alerts
                   </span>
                   <span className="text-[10px] font-mono text-slate-400">
                     {whatsAppQueue.length} Total
@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
                           <span className="font-bold text-slate-900 dark:text-white truncate">
                             {item.title}
                           </span>
-                          <span className="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded">
+                          <span className="text-[9px] font-mono font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/50 px-1.5 py-0.5 rounded">
                             {item.status.toUpperCase()}
                           </span>
                         </div>
@@ -161,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
                 <img
                   src={currentUser.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                   alt={currentUser.full_name}
-                  className="w-7 h-7 rounded-full object-cover ring-2 ring-emerald-500/40"
+                  className="w-7 h-7 rounded-full object-cover ring-2 ring-sky-500/40"
                 />
                 <div className="hidden sm:block text-left">
                   <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
@@ -186,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
                   <div className="p-2 border-b border-slate-100 dark:border-slate-800 text-xs">
                     <p className="font-bold text-slate-900 dark:text-white">{currentUser.full_name}</p>
                     <p className="text-[10px] text-slate-400 font-mono">{currentUser.email}</p>
-                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
+                    <p className="text-[10px] text-sky-600 dark:text-sky-400 font-semibold mt-0.5">
                       Status: {currentUser.role === 'admin' ? 'ADMIN' : currentUser.role.toUpperCase()}
                     </p>
                   </div>
@@ -199,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleTheme, isDark }) => {
                       }}
                       className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center gap-2 transition-colors"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                      <Sparkles className="w-3.5 h-3.5 text-sky-500" />
                       <span>Retake AI Learning Quiz</span>
                     </button>
                   )}

@@ -21,6 +21,8 @@ import {
   StressAnalysisResult,
   WhatsAppNotification,
   StudySessionLog,
+  EventStaffMember,
+  StudentExamRecord,
 } from '@/lib/types';
 import {
   INITIAL_ADMIN_USER,
@@ -32,6 +34,8 @@ import {
   SEED_ASSIGNMENTS,
   SEED_EVENTS,
   SEED_PROJECTS,
+  SEED_EVENT_STAFF_MEMBERS,
+  SEED_STUDENT_EXAM_RECORDS,
   DEFAULT_STUDENT_LEARNING_PROFILE,
 } from '@/lib/seedData';
 import { calculateCognitiveStress } from '@/lib/stressEngine';
@@ -58,6 +62,8 @@ interface AppContextType {
   assignments: Assignment[];
   events: InstitutionalEvent[];
   projectGroups: ProjectGroup[];
+  eventStaffMembers: EventStaffMember[];
+  studentExamRecords: StudentExamRecord[];
   auditLogs: AuditLog[];
   studentLearningProfile: StudentLearningProfile;
   personalizedTimetable: DailyPersonalizedTimetable[];
@@ -127,7 +133,13 @@ interface AppContextType {
   createProjectGroup: (group: Omit<ProjectGroup, 'id' | 'tasks' | 'comments' | 'files'>) => void;
   createProjectTask: (groupId: string, task: Omit<ProjectTask, 'id'>) => void;
   updateProjectTaskStatus: (groupId: string, taskId: string, status: ProjectTask['status']) => void;
+  updateProjectPriority: (groupId: string, priority: 'high' | 'medium' | 'low') => void;
+  updateProjectTaskPriority: (groupId: string, taskId: string, priority: 'high' | 'medium' | 'low') => void;
   addProjectComment: (groupId: string, content: string, attachmentName?: string) => void;
+
+  getProfileCompletionPercentage: (user?: User | null) => number;
+  updateUserProfile: (id: string, updates: Partial<User>) => void;
+  createEventStaffMember: (member: Omit<EventStaffMember, 'id'>) => void;
 
   addAuditLog: (action: string, category: AuditLog['category'], details?: Record<string, any>) => void;
 }
@@ -227,6 +239,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return SEED_PROJECTS;
   });
 
+  // Event Organizers & Volunteers
+  const [eventStaffMembers, setEventStaffMembers] = useState<EventStaffMember[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('eduweave_event_staff_v2');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return SEED_EVENT_STAFF_MEMBERS;
+  });
+
+  // Student Examination Records
+  const [studentExamRecords, setStudentExamRecords] = useState<StudentExamRecord[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('eduweave_exam_records_v2');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return SEED_STUDENT_EXAM_RECORDS;
+  });
+
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
   // 15-Question Learning Profile
@@ -265,6 +299,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [demoStep, setDemoStep] = useState(0);
   const [demoMessage, setDemoMessage] = useState('');
 
+  // Automated Overdue Task and Assignment Status Check
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    setAssignments(prev =>
+      prev.map(a => {
+        if (a.status !== 'completed' && a.due_date < todayStr && a.status !== 'overdue') {
+          return { ...a, status: 'overdue' };
+        }
+        return a;
+      })
+    );
+  }, []);
+
   // Save to localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -276,6 +323,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       localStorage.setItem('eduweave_assignments_v2', JSON.stringify(assignments));
       localStorage.setItem('eduweave_events_v2', JSON.stringify(events));
       localStorage.setItem('eduweave_projects_v2', JSON.stringify(projectGroups));
+      localStorage.setItem('eduweave_event_staff_v2', JSON.stringify(eventStaffMembers));
+      localStorage.setItem('eduweave_exam_records_v2', JSON.stringify(studentExamRecords));
       localStorage.setItem('eduweave_lp_v2', JSON.stringify(studentLearningProfile));
       localStorage.setItem('eduweave_wa_v2', JSON.stringify(whatsAppQueue));
       if (currentUser) {
@@ -284,7 +333,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         localStorage.removeItem('eduweave_auth_user_v2');
       }
     }
-  }, [users, departments, classes, subjects, syllabi, assignments, events, projectGroups, studentLearningProfile, whatsAppQueue, currentUser]);
+  }, [users, departments, classes, subjects, syllabi, assignments, events, projectGroups, eventStaffMembers, studentExamRecords, studentLearningProfile, whatsAppQueue, currentUser]);
 
   // Derived Cognitive Stress Score
   const studentStressResult: StressAnalysisResult = React.useMemo(() => {
@@ -717,6 +766,79 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     );
   };
 
+  const updateProjectPriority = (groupId: string, priority: 'high' | 'medium' | 'low') => {
+    setProjectGroups(prev =>
+      prev.map(g => (g.id === groupId ? { ...g, priority } : g))
+    );
+    addAuditLog('Project Priority Updated', 'User', { groupId, priority });
+  };
+
+  const updateProjectTaskPriority = (groupId: string, taskId: string, priority: 'high' | 'medium' | 'low') => {
+    setProjectGroups(prev =>
+      prev.map(g => {
+        if (g.id === groupId) {
+          return {
+            ...g,
+            tasks: g.tasks.map(t => (t.id === taskId ? { ...t, priority } : t)),
+          };
+        }
+        return g;
+      })
+    );
+  };
+
+  const createEventStaffMember = (member: Omit<EventStaffMember, 'id'>) => {
+    const newStaff: EventStaffMember = {
+      ...member,
+      id: `staff-${Date.now()}`,
+    };
+    setEventStaffMembers(prev => [...prev, newStaff]);
+    addAuditLog('Event Staff Registered', 'Event', { name: newStaff.name, role: newStaff.role, section: newStaff.section });
+  };
+
+  const getProfileCompletionPercentage = (user?: User | null): number => {
+    const target = user || currentUser;
+    if (!target) return 0;
+    let score = 0;
+    if (target.full_name && target.full_name.trim().length > 0) score += 15;
+    if (target.unique_id && target.unique_id.trim().length > 0) score += 15;
+    if (target.department_name || target.department_id) score += 15;
+    if (target.class_name || target.section || target.semester) score += 15;
+    if (target.phone && target.phone.trim().length > 0) score += 15;
+    if (target.avatar_url && target.avatar_url.trim().length > 0) score += 10;
+    // Mandatory Bio / About Me: 15%
+    if (target.bio && target.bio.trim().length > 0) score += 15;
+    return Math.min(100, score);
+  };
+
+  const updateUserProfile = (id: string, updates: Partial<User>) => {
+    setUsers(prev =>
+      prev.map(u => {
+        if (u.id === id) {
+          const updated = { ...u, ...updates };
+          const pct = getProfileCompletionPercentage(updated);
+          if (pct === 100 && updated.bio && updated.bio.trim().length > 0) {
+            updated.profile_completed = true;
+          }
+          return updated;
+        }
+        return u;
+      })
+    );
+    if (currentUser?.id === id) {
+      setCurrentUser(prev => {
+        if (!prev) return null;
+        const updated = { ...prev, ...updates };
+        const pct = getProfileCompletionPercentage(updated);
+        if (pct === 100 && updated.bio && updated.bio.trim().length > 0) {
+          updated.profile_completed = true;
+        }
+        return updated;
+      });
+    }
+    addAuditLog('User Profile Updated', 'User', { userId: id, ...updates });
+  };
+
   // Hackathon Demonstration Simulator (Section 108)
   const runHackathonDemoSimulation = async () => {
     setIsDemoRunning(true);
@@ -805,6 +927,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         assignments,
         events,
         projectGroups,
+        eventStaffMembers,
+        studentExamRecords,
         auditLogs,
         studentLearningProfile,
         personalizedTimetable,
@@ -863,7 +987,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         createProjectGroup,
         createProjectTask,
         updateProjectTaskStatus,
+        updateProjectPriority,
+        updateProjectTaskPriority,
         addProjectComment,
+
+        getProfileCompletionPercentage,
+        updateUserProfile,
+        createEventStaffMember,
 
         addAuditLog,
       }}

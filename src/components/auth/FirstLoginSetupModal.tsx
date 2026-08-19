@@ -100,7 +100,7 @@ export const FirstLoginSetupModal: React.FC = () => {
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-400 text-xs font-bold border border-sky-200 dark:border-sky-800">
             <ShieldCheck className="w-4 h-4" />
             <span>Mandatory First-Time Setup</span>
           </div>
@@ -139,7 +139,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Create a strong password"
                     required
-                    className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"
+                    className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500 font-mono"
                   />
                   <button
                     type="button"
@@ -161,7 +161,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat new password"
                   required
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500 font-mono"
                 />
               </div>
             </div>
@@ -171,14 +171,14 @@ export const FirstLoginSetupModal: React.FC = () => {
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-bold">
                   <span className="text-slate-500">Password Strength</span>
-                  <span className={strength >= 75 ? 'text-emerald-500' : strength >= 50 ? 'text-amber-500' : 'text-red-500'}>
+                  <span className={strength >= 75 ? 'text-sky-500' : strength >= 50 ? 'text-amber-500' : 'text-red-500'}>
                     {strength >= 75 ? 'Strong' : strength >= 50 ? 'Moderate' : 'Weak'}
                   </span>
                 </div>
                 <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${
-                      strength >= 75 ? 'bg-emerald-500' : strength >= 50 ? 'bg-amber-500' : 'bg-red-500'
+                      strength >= 75 ? 'bg-sky-500' : strength >= 50 ? 'bg-amber-500' : 'bg-red-500'
                     }`}
                     style={{ width: `${strength}%` }}
                   />
@@ -204,7 +204,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Chen"
                   required
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@eduweave.edu"
                   required
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500 font-mono"
                 />
               </div>
 
@@ -232,7 +232,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+1 (555) 000-0000"
                   required
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500 font-mono"
                 />
               </div>
 
@@ -243,7 +243,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                 <select
                   value={departmentId}
                   onChange={(e) => setDepartmentId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
                 >
                   {departments.map((d) => (
                     <option key={d.id} value={d.id}>
@@ -263,7 +263,7 @@ export const FirstLoginSetupModal: React.FC = () => {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Share your academic interests, skills, or subjects..."
-                className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
             </div>
           </div>
@@ -271,7 +271,7 @@ export const FirstLoginSetupModal: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
           >
             {isLoading ? (
               <span>Saving Profile & Encrypting Password...</span>

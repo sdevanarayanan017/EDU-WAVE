@@ -182,10 +182,10 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
       <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="p-1.5 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold">
               <ShieldCheck className="w-4 h-4" />
             </span>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
               Status: ADMIN • Platform Master Console
             </span>
           </div>
@@ -200,7 +200,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setUserModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all flex items-center gap-1.5 active:scale-95"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-sky-500/25 transition-all flex items-center gap-1.5 active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Generate Account ID</span>
@@ -227,7 +227,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
               <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
                 {departments.length}
               </p>
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              <p className="text-[11px] text-sky-600 dark:text-sky-400 font-semibold">
                 With assigned HOD heads
               </p>
             </div>
@@ -260,7 +260,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 WhatsApp Queue Alerts
               </span>
-              <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+              <p className="text-2xl font-black text-sky-600 dark:text-sky-400 font-mono">
                 {whatsAppQueue.length}
               </p>
               <p className="text-[11px] text-slate-400 font-semibold">
@@ -278,7 +278,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
                 </h2>
                 <button
                   onClick={() => setDeptModalOpen(true)}
-                  className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                  className="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline"
                 >
                   + Add Department
                 </button>
@@ -292,7 +292,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ activeTab, setActiveTab })
                   >
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400">
+                        <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-400">
                           {dept.code}
                         </span>
                         <span className="text-xs text-slate-400 font-medium">

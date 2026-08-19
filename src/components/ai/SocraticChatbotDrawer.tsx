@@ -70,7 +70,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
     return (
       <button
         onClick={() => setSocraticDrawerOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-slate-900 hover:from-emerald-500 hover:to-teal-500 text-white shadow-floating hover:shadow-2xl transition-all duration-300 active:scale-95 flex items-center gap-2.5 group"
+        className="fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-slate-900 hover:from-sky-400 hover:to-blue-500 text-white shadow-floating hover:shadow-2xl transition-all duration-300 active:scale-95 flex items-center gap-2.5 group"
         aria-label="Open Socratic AI Academic Assistant"
       >
         <Sparkles className="w-5 h-5 animate-pulse text-amber-300" />
@@ -168,7 +168,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
       {/* Header */}
       <div className="p-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 font-bold">
+          <div className="p-2 rounded-xl bg-gradient-to-tr from-sky-400 to-blue-600 text-white font-bold">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
@@ -176,7 +176,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
               <h3 className="text-sm font-extrabold tracking-tight text-white">
                 Socratic AI Tutor
               </h3>
-              <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
                 Active Guardrails
               </span>
             </div>
@@ -202,7 +202,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
           <select
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="text-xs font-bold bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="text-xs font-bold bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-1 focus:ring-sky-500"
           >
             <option value="Biology">Biology (Unit 3.2)</option>
             <option value="Mathematics">Mathematics (Unit 4.1)</option>
@@ -213,7 +213,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
         </div>
 
         {activeAssignmentContext ? (
-          <div className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+          <div className="flex items-center gap-1.5 text-[10px] font-medium text-sky-700 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/60 px-2 py-0.5 rounded-md border border-sky-200 dark:border-sky-800">
             <BookOpen className="w-3 h-3" />
             <span className="truncate max-w-[140px]">{activeAssignmentContext.title}</span>
             <button
@@ -239,8 +239,8 @@ export const SocraticChatbotDrawer: React.FC = () => {
               className={`flex items-start gap-2.5 ${isAI ? 'justify-start' : 'justify-end'}`}
             >
               {isAI && (
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-slate-900 to-emerald-600 text-white flex items-center justify-center shrink-0 mt-1 shadow-sm">
-                  <Bot className="w-4 h-4 text-emerald-300" />
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-slate-900 to-sky-600 text-white flex items-center justify-center shrink-0 mt-1 shadow-sm">
+                  <Bot className="w-4 h-4 text-sky-300" />
                 </div>
               )}
 
@@ -248,7 +248,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
                 className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
                   isAI
                     ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/80'
-                    : 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                    : 'bg-sky-600 text-white shadow-md shadow-sky-600/20'
                 }`}
               >
                 <div className="whitespace-pre-wrap font-sans">
@@ -256,7 +256,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
                 </div>
                 <div
                   className={`mt-1.5 text-[9px] text-right font-mono ${
-                    isAI ? 'text-slate-400 dark:text-slate-500' : 'text-emerald-200'
+                    isAI ? 'text-slate-400 dark:text-slate-500' : 'text-sky-200'
                   }`}
                 >
                   {msg.timestamp}
@@ -278,7 +278,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
 
         {isLoading && (
           <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 italic p-2">
-            <Sparkles className="w-4 h-4 text-emerald-500 animate-spin" />
+            <Sparkles className="w-4 h-4 text-sky-500 animate-spin" />
             <span>Socratic assistant is formulating guidance...</span>
           </div>
         )}
@@ -292,7 +292,7 @@ export const SocraticChatbotDrawer: React.FC = () => {
           <button
             key={idx}
             onClick={() => handleSendMessage(p.query)}
-            className="shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white dark:bg-slate-700/80 hover:bg-emerald-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 transition-colors"
+            className="shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white dark:bg-slate-700/80 hover:bg-sky-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 transition-colors"
           >
             {p.label}
           </button>
@@ -313,12 +313,12 @@ export const SocraticChatbotDrawer: React.FC = () => {
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder={`Ask a question about ${selectedSubject}...`}
-            className="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <button
             type="submit"
             disabled={!inputQuery.trim() || isLoading}
-            className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold transition-all shadow-md shadow-emerald-600/20 active:scale-95"
+            className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white font-bold transition-all shadow-md shadow-sky-500/20 active:scale-95"
             aria-label="Send query"
           >
             <Send className="w-4 h-4" />
